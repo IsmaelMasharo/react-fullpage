@@ -25,6 +25,7 @@ class Fullpage extends PureComponent {
     transitionTiming: 700,
     style: {
       position: 'fixed',
+      pointerEvents: 'none',
       top: 0,
       left: 0,
       right: 0,
@@ -124,6 +125,7 @@ class Fullpage extends PureComponent {
     const {
       resetScroll,
       translateY,
+      pageYOffset: previousPageYOffset
     } = this.state;
 
 
@@ -139,6 +141,9 @@ class Fullpage extends PureComponent {
           window.scrollTo(0, translateY * -1);
         }
 
+        const isScrollDown = previousPageYOffset < window.pageYOffset;
+        const multiplier = isScrollDown ? 0.1 : 0.9;
+
         const pageYOffset = window.pageYOffset || 0;
         this.setState({
           pageYOffset,
@@ -147,7 +152,7 @@ class Fullpage extends PureComponent {
 
         const newSlide = this.slides.find((slide) => {
           const el = slide.el.current;
-          return pageYOffset < el.offsetTop + (el.offsetHeight * 0.5);
+          return pageYOffset < el.offsetTop + (el.offsetHeight * multiplier);
         });
         this.goto(newSlide);
         this.ticking = false;
@@ -339,6 +344,7 @@ class Fullpage extends PureComponent {
           name="Driver"
           style={{
             position: 'relative',
+            pointerEvents: 'none',
           }}
           ref={this.driverRef}
         />
